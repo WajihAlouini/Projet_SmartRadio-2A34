@@ -5,6 +5,13 @@
 #-------------------------------------------------
 
 QT       += core gui sql
+QT += printsupport
+QT += core gui multimedia multimediawidgets
+QT +=serialport
+QT += multimedia
+QT += charts
+
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,17 +35,22 @@ SOURCES += \
     invite.cpp \
         main.cpp \
         mainwindow.cpp \
-    connection.cpp
+    connection.cpp \
+    windowlogin.cpp
 
 HEADERS += \
     invite.h \
         mainwindow.h \
-    connection.h
+    connection.h \
+    windowlogin.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        windowlogin.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES +=

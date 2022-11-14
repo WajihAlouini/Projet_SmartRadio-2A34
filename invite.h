@@ -1,34 +1,43 @@
 #ifndef INVITE_H
 #define INVITE_H
-
+#include <QString>
+#include <QSqlQueryModel>
 #include <QString>
 #include <QSqlQueryModel>
 #include <QDateTime>
-#include <QString>
-#include <QSqlQueryModel>
+#include <QAudioInput>
+#include <QFile>
+#include <QMediaPlayer>
 
 class invite
 {
 public:
     invite();
-    invite(QString,int,QDateTime);
+    invite(int,int,QDateTime);
 
-    QString getnom();
+    int getid();
     int getrep();
-    QDateTime getdate();
-    void setnom(QString);
+    QDateTime getdatetime();
+
+    void setid(int);
     void setrep(int);
-    void setdate(QDateTime);
+    void setdatetime(QDateTime);
+
     bool ajouter();
    QSqlQueryModel* afficher();
-bool supprimer(QString);
-bool modifier(QString,int,QDateTime);
+bool supprimer(int);
+bool modifier();
+QSqlQueryModel* afficherech(QString,int);
+QString recherchequestion(int);
+QString rechercherep(int);
+void playvideo();
+bool checklogin(QString,QString);
+
 
 private:
-    int repetition;
-    QString nom;
-    QDateTime date;
-};
+    int id,repetition;
+    QDateTime datetime;};
+
 
 
 #endif // INVITE_H
