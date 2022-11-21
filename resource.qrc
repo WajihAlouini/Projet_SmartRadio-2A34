@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/Image">
+        <file>resource/about.png</file>
+        <file>resource/copy.png</file>
+        <file>resource/cut.png.jpg</file>
+        <file>resource/new.png</file>
+        <file>resource/open.png</file>
+        <file>resource/paste.png</file>
+        <file>resource/redo.png</file>
+        <file>resource/save as.png</file>
+        <file>resource/save.png</file>
+        <file>resource/undo.png</file>
+        <file>myappico.png.png</file>
+    </qresource>
+</RCC>
