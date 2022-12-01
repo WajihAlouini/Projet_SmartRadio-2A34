@@ -3,17 +3,17 @@
 #include <QMessageBox>
 #include "connection.h"
 #include<QString>
-#include "alert.h"
-#include <QMediaPlayer>
-#include <QVideoWidget>
 #include<QDebug>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Connection c;
+
     bool test=c.createconnect();
     MainWindow w;
-    if(test)
+    w.setFixedSize(500,600);
+    w.setWindowTitle("temperture sensor");
+    if(test )
     {w.show();
         QMessageBox::information(nullptr, QObject::tr("database is open"),
                     QObject::tr("connection successful.\n"
@@ -28,15 +28,6 @@ int main(int argc, char *argv[])
 
 
 
-    QMediaPlayer* player = new QMediaPlayer;
-    QVideoWidget *VW =new QVideoWidget;
-player ->setVideoOutput(VW);
-player->setMedia(QUrl("qrc:/un chat qui dance"));
-VW->setGeometry(100,200,300,400);
-VW->show();
-player->play();
-
- qDebug() <<player->state();
 
     return a.exec();
 }

@@ -12,8 +12,6 @@
 #include <QPdfWriter>
 #include <QTextDocument>
 #include <QPrintDialog>
-#include"alert.h"
-#include "smtp.h"
 #include <QSqlQuery>
 #include <QAbstractSocket>
 #include <QTcpSocket>
@@ -24,12 +22,20 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
    ui->setupUi(this);
-
-   //for email tab
-   connect(ui->envoyer, SIGNAL(clicked()),this, SLOT(sendMail()));
-   connect(ui->browse, SIGNAL(clicked()), this, SLOT(browse()));
-         ui->lineEdit_id->setValidator(new QIntValidator(100, 99999999, this));
+     ui->lineEdit_id->setValidator(new QIntValidator(100, 99999999, this));
      ui->tableView->setModel(per.afficher());
+     int ret=A.connect_ardouino();
+     switch (ret)
+     {
+     case(0):qDebug()<<"arduino is available and connected to :"<<A.getardouino_port_name();
+     break;
+     case(1):qDebug()<<"arduino is available but not connected to :"<<A.getardouino_port_name();
+     break;
+
+     case(-1):qDebug()<<"arduino is not  available :";
+     }
+QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(update_label()));
+
 }
 
 MainWindow::~MainWindow()
@@ -44,9 +50,7 @@ void MainWindow::on_pushButton_clicked()
        QString PRENOM=ui->lineEdit_prenom->text();
      QString FONCTION=fnct;
         int SALAIRE=ui->lineEdit_salaire->text().toInt();
-        int alert=ui->lineEdit_alert->text().toInt();
-
-        personnel k (ID,NOMP,PRENOM,FONCTION,SALAIRE,alert);
+        personnel k (ID,NOMP,PRENOM,FONCTION,SALAIRE);
         bool test=k.ajouter();
         if(!test)
         {
@@ -85,11 +89,11 @@ void MainWindow::on_pushButton_modifier_clicked()
            int ID=ui->id->text().toInt();
            QString NOMP=ui->nom->text();
            QString PRENOM=ui->prenom->text();
-            QString FONCTION=ui->fonction->text();
+            QString FONCTION=fnct;
              int SALAIRE=ui->salaire->text().toInt();
-              int alert=ui->alert->text().toInt();
-            bool test=pe.modifier(ID,NOMP,PRENOM,FONCTION,SALAIRE,alert);
-            if (test){
+
+            bool test=pe.modifier(ID,NOMP,PRENOM,FONCTION,SALAIRE);
+            if (!test){
      QMessageBox::information(nullptr, QObject::tr("Modifier avec succées "),
                        QObject::tr("invite modifiée.\n"
                                  "Click ok to exit."), QMessageBox::Ok);
@@ -316,142 +320,55 @@ slice4->setExploded();
 
 }
 
-void MainWindow::on_pushButton_4_clicked()
-{
-QString id=ui->lineEdit_alert->text();
-    QSqlQuery Query;
-    Query.prepare("select * FROM personnel where ID=:id and alert LIKE '%1%'");
-     Query.bindValue(":id", id);
-   alert  *cErr =new alert();
-   if  (Query.next())
-   {
-       QMessageBox::information(nullptr, QObject::tr("micro  detecter"),
-                   QObject::tr("micro  detecter.\n"
-                               "Click Cancel to exit."), QMessageBox::Cancel);}
-       else{
-           QMessageBox::critical(nullptr, QObject::tr("micro non detecter"),
-                       QObject::tr("micro non detecter.\n"
-                                   "Click Cancel to exit."), QMessageBox::Cancel);
-
-   }
-}
-
-
-
-
-void  MainWindow::browse()
-{
-    files.clear();
-
-    QFileDialog dialog(this);
-    dialog.setDirectory(QDir::homePath());
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-
-    if (dialog.exec())
-        files = dialog.selectedFiles();
-
-    QString fileListString;
-    foreach(QString file, files)
-        fileListString.append( "\"" + QFileInfo(file).fileName() + "\" " );
-
-    ui->file->setText( fileListString );
-
-}
-
-void   MainWindow::sendMail()
-{
-    Smtp* smtp = new Smtp("mohamedali.benromdhane1@esprit.tn","medali@@@","smtp.gmail.com",465);
-    connect(smtp, SIGNAL(status(QString)), this, SLOT(mailSent(QString)));
-
-   /* if( !files.isEmpty() )
-    smtp->sendMail("mohamedali.benromdhane1@esprit.tn", ui->adresseMail->text() , ui->objet->text(),ui->message->toPlainText() );
-    else
-        smtp->sendMail("mohamedali.benromdhane1@esprit.tn", ui->adresseMail->text() , ui->objet->text(),ui->message->toPlainText());*/
-}
-
-void   MainWindow::mailSent(QString status)
-{
-
-    if(status == "Message sent")
-        QMessageBox::warning( nullptr, tr( "Qt Simple SMTP client" ), tr( "Message sent!\n\n" ) );
-    ui->adresseMail->clear();
-    ui->objet->clear();
-    ui->file->clear();
-    ui->message->clear();
-   // ui->pass->clear();
-}
-
-
-
-
-
-
-/*
-void MainWindow::browse()
-{
-    files.clear();
-
-    QFileDialog dialog(this);
-    dialog.setDirectory(QDir::homePath());
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-
-    if (dialog.exec())
-        files = dialog.selectedFiles();
-
-    QString fileListString;
-    foreach(QString file, files)
-        fileListString.append( "\"" + QFileInfo(file).fileName() + "\" " );
-
-    ui->file->setText( fileListString );
-}
-
-void MainWindow::sendMail()
-{
-    Smtp* smtp = new Smtp("rana.maknine@esprit.tn","211JFT0381.", "smtp.gmail.com",456);
-    connect(smtp, SIGNAL(status(QString)), this, SLOT(mailSent(QString)));
-
-    if( !files.isEmpty() )
-        smtp->sendMail("meriem.mghirbi@esprit.tn", ui->rcpt->text() , ui->subject->text(),ui->msg->toPlainText(), files );
-    else
-        smtp->sendMail("meriem.mghirbi@esprit.tn",ui->rcpt->text() , ui->subject->text(),ui->msg->toPlainText());
-}
-void   MainWindow::mailSent(QString status)
-{
-
-    if(status == "Message sent")
-       // QMessageBox::warning( nullptr, tr( "Qt Simple SMTP client" ), tr( "Message sent!\n\n" ) );
-    {
-        QSystemTrayIcon *notif = new QSystemTrayIcon;
-
-        notif->showMessage("succes","message envoyé",QSystemTrayIcon::Information,1500);
-
-    }
-    ui->rcpt->clear();
-    ui->subject->clear();
-    ui->file->clear();
-    ui->msg->clear();
-    ui->mail_pass->clear();
-}
-*/
 void MainWindow::on_notepadebt_clicked()
 {
     notepadee = new notepade(this);
-   notepadee->show();
+     notepadee->show();
 }
 
 
-   // connect(ui->sendBtn, SIGNAL(clicked()),this, SLOT(sendMail()));
-
-
-
-void MainWindow::on_envoyer_clicked()
+void MainWindow::on_comboBox_2_activated(const QString &arg1)
 {
-    Smtp* smtp = new Smtp("mohamedali.benromdhane1@esprit.tn","medali@@@","smtp.gmail.com",465);
-    connect(smtp, SIGNAL(status(QString)), this, SLOT(mailSent(QString)));
 
 }
 
 void MainWindow::on_comboBox_activated(const QString &arg1)
 {
-    fnct=arg1;
+
 }
+
+void MainWindow::on_pushButton_4_clicked()//ouvrir
+{
+     A.write_to_ardouino("1");
+}
+
+void MainWindow::on_pushButton_5_clicked()//fermer
+{
+    A.write_to_ardouino("0");
+}
+void MainWindow::update_label()
+{
+    data=A.read_from_ardouino();
+        QByteArray text=QByteArray::fromHex(data);
+        QSqlQuery qry;
+        serialBuffer  +=QString::fromStdString(data.toStdString());
+
+        if( qry.exec("select * from PERSONNEL where ID like '"+serialBuffer+"%'")
+                     )
+        {
+                             int count=0;
+                             while(qry.next())
+                                { count++;}
+                         if(count==1)
+                         {
+
+                        QMessageBox::information(this,"porte","la porte est ouverte");
+                     }
+                         }
+                         else
+                         {
+                            // QMessageBox::warning(this,"error","can't log in check informations");
+            QMessageBox::warning(this,"error","error");
+                         }
+}
+

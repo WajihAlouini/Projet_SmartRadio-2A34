@@ -1,4 +1,4 @@
-QT += core gui
+QT += core gui serialport
 QT +=sql
 QT += printsupport
 QT += core gui charts
@@ -21,32 +21,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    alert.cpp \
+    ardouino.cpp \
     connection.cpp \
     main.cpp \
     mainwindow.cpp \
     notepade.cpp \
     notifications.cpp \
-    personnel.cpp \
-    smtp.cpp \
-    videoplay.cpp
+    personnel.cpp
 
 HEADERS += \
-    alert.h \
+    ardouino.h \
     connection.h \
     mainwindow.h \
     notepade.h \
     notifications.h \
-    personnel.h \
-    smtp.h \
-    videoplay.h
+    personnel.h
 
 FORMS += \
-    icone.ui \
-    login.ui \
     mainwindow.ui \
-    notepade.ui \
-    videoplay.ui
+    notepade.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

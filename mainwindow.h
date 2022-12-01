@@ -6,11 +6,11 @@
 #include <QChartView>
 #include <QPieSeries>
 #include <QPieSlice>
-#include "smtp.h"
 #include <QTcpSocket>
 #include <QAbstractSocket>
 #include "notepade.h"
   #include <notifications.h>
+#include "ardouino.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -20,7 +20,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -31,17 +31,13 @@ private slots:
     void on_pushButton_tri_clicked();
     void on_pushButton_pdf_clicked();
     void on_pushButton_3_clicked();
-    void on_pushButton_4_clicked();
-    void sendMail();
-    void mailSent(QString);
-    void browse();
     void on_notepadebt_clicked();
-
-    //void on_sendBtn_clicked();
-
-    void on_envoyer_clicked();
-
     void on_comboBox_activated(const QString &arg1);
+    void on_comboBox_2_activated(const QString &arg1);
+ void update_label();
+    void on_pushButton_4_clicked();
+
+    void on_pushButton_5_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -51,5 +47,8 @@ private:
     notepade *notepadee;
     notification N;
     QString fnct;
+    ardouino A;
+    QByteArray data ;
+    QString serialBuffer;
 };
 #endif // MAINWINDOW_H

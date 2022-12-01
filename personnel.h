@@ -8,21 +8,19 @@
 class personnel
 {
 private:
-    int ID,SALAIRE,alert;
+    int ID,SALAIRE;
    QString NOMP,PRENOM,FONCTION;
 public:
     personnel();
-    personnel( int, QString, QString, QString,int,int);
+    personnel( int, QString, QString, QString,int);
    int getid();
    int getsalaire();
-    int getalert();
    QString getnom();
    QString getprenom();
    QString getfonction();
 
  void setid(int);
    void setsalaire( int);
-    void setalert( int);
   void  setnom(QString);
 void setprenom( QString);
   void  setfonction(QString);
@@ -30,11 +28,11 @@ void setprenom( QString);
    bool ajouter();
 bool supprimer(int);
 QSqlQueryModel*afficher();
-bool modifier( int, QString, QString, QString,int,int);
+bool modifier( int, QString, QString, QString,int);
 QSqlQueryModel *trierpersonnel();
-//QSqlQueryModel *personnel::rechercher(QString );
+
 void rechercher(QString a,QTableView *g);
-void erreur();
+
 };
 
 #endif // PERSONNEL_H
