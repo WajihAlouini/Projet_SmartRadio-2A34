@@ -53,6 +53,7 @@ invite::invite()
     QSqlQueryModel* invite::afficher(){
 
 
+
         QSqlQueryModel* model=new QSqlQueryModel();
 
 
@@ -60,6 +61,8 @@ invite::invite()
               model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
               model->setHeaderData(1, Qt::Horizontal, QObject::tr("REPETITIONS"));
               model->setHeaderData(2, Qt::Horizontal, QObject::tr("DATETIME"));
+
+
 
 
 
@@ -77,17 +80,11 @@ invite::invite()
         invite I4;
          QString id_string= QString::number(id);
         QString repetition_string=QString::number(repetition);
-       bool test=I4.afficherech(id_string,1);
-       if(test==false)return query.exec();
-       else{
-
-
-
         query.prepare("UPDATE invite SET ID =:id, REPETITIONS=:repetition, DATETIME=:datetime WHERE  ID = '"+id_string+"' ");
         query.bindValue(":id",id_string);
         query.bindValue(":repetition", repetition_string);
         query.bindValue(":datetime", datetime);
-       }
+
 
 
         return query.exec();
@@ -107,7 +104,7 @@ invite::invite()
 
     }if (choix==2){
 
-        model->setQuery("SELECT* FROM invite WHERE DATEI like mot");
+        model->setQuery("SELECT* FROM invite WHERE DATEI like '%DEC%'");
         model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
         model->setHeaderData(1, Qt::Horizontal, QObject::tr("REPETITIONS"));
         model->setHeaderData(2, Qt::Horizontal, QObject::tr("DATETIME"));

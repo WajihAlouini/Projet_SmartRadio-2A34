@@ -1,5 +1,7 @@
 #ifndef INVITE_H
 #define INVITE_H
+
+
 #include <QString>
 #include <QSqlQueryModel>
 #include <QString>
@@ -37,7 +39,5 @@ bool checklogin(QString,QString);
 private:
     int id,repetition;
     QDateTime datetime;};
-
-
 
 #endif // INVITE_H

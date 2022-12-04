@@ -1,4 +1,5 @@
 #include "connection.h"
+//meriem
 
 Connection::Connection()
 {
@@ -14,10 +15,6 @@ db.setPassword("jamjoum1");//inserer mot de passe de cet utilisateur
 
 if (db.open())
 test=true;
-QSqlQuery query;
-
-
-
 
 
     return  test;
